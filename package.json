@@ -10,11 +10,11 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/mihkuno/BLACKJACK"
+        "url": "git+https://github.com/mihkuno/BLACKOMEGA"
     },
     "author": "Joeninyo Cainday",
     "license": "MIT",
-    "homepage": "https://github.com/mihkuno/BLACKJACK",
+    "homepage": "https://github.com/mihkuno/BLACKOMEGA",
     "dependencies": {
         "@tensorflow/tfjs": "^4.1.0",
         "normalize.css": "^8.0.1",
