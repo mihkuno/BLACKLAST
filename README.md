@@ -1,4 +1,4 @@
-# Object Detection using YOLOv5 and Tensorflow.js
+# BlackJack Omega Counter using YOLOv5 and Tensorflow.js
 
 ![love](https://img.shields.io/badge/Made%20with-🖤-white)
 ![tensorflow.js](https://img.shields.io/badge/tensorflow.js-white?logo=tensorflow)
