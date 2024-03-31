@@ -21,6 +21,7 @@ pnpm install #Install dependencies
 pnpm run dev # Start dev server
 pnpm run build # Build for productions
 pnpm run preview # Preview production
+pnpm run deploy # Deploy to Github Pages
 ```
 
 **Configs**
