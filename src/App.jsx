@@ -149,19 +149,19 @@ const App = () => {
                 <img
                     src="#"
                     ref={imageRef}
-                    onLoad={() => { detectImage(imageRef.current, model, classThreshold, containerRef.current, (detections) => setDetections(prev => detections) )} }
+                    onLoad={() => { setStatus('Wait'); detectImage(imageRef.current, model, classThreshold, containerRef.current, (detections) => setDetections(prev => detections) )} }
                 />
                 <video
                     autoPlay
                     muted
                     ref={cameraRef}
-                    onPlay={() => { detectVideo(cameraRef.current, model, classThreshold, containerRef.current, (detections) => setDetections(prev => detections) );} }
+                    onPlay={() => { setStatus('Wait'); detectVideo(cameraRef.current, model, classThreshold, containerRef.current, (detections) => setDetections(prev => detections) );} }
                 />
                 <video
                     autoPlay
                     muted
                     ref={videoRef}
-                    onPlay={() => { detectVideo(videoRef.current, model, classThreshold, containerRef.current, (detections) => setDetections(prev => detections) )} }
+                    onPlay={() => { setStatus('Wait'); detectVideo(videoRef.current, model, classThreshold, containerRef.current, (detections) => setDetections(prev => detections) )} }
                 />
             </div>
 
