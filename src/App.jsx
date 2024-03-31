@@ -77,39 +77,44 @@ const App = () => {
             setStatus(prev => 'Start');
         }
 
-        // update the card stack
-        detections.forEach((det) => {
-            // add card if not in the stack
-            if (!stack.includes(det.name)) {
-                stack.push(det.name);
+        setStack(stack => {
+            // update the card stack
+            detections.forEach((det) => {
+                // add card if not in the stack
+                if (!stack.includes(det.name)) {
+                    stack.push(det.name);
+                }
+            });
+
+            // map all the names to their respective values
+            const map = stack.map((card) => values[card]);
+
+            // get the sum of the card values
+            const sum = map.reduce((a, b) => a + b, 0);
+
+            // check card stack count if blackjack or not
+            if (sum === 21) {
+                setStatus(prev => 'Blackjack');
+                setCount(prev => 0);
+                stack = [];
             }
+            else if (sum > 21) {
+                setStatus(prev => 'Bust');
+                setCount(prev => 0);
+                stack = [];
+            }
+            else {
+                setStatus(prev => 'Start');
+                setCount(prev => sum);
+            }
+
+            return stack;
         });
 
-        // map all the names to their respective values
-        const map = stack.map((card) => values[card]);
-
-        // get the sum of the card values
-        const sum = map.reduce((a, b) => a + b, 0);
-
-        // check card stack count if blackjack or not
-        if (sum === 21) {
-            setStatus(prev => 'Blackjack');
-            setStack(prev => []);
-            setCount(prev => 0);
-        }
-        else if (sum > 21) {
-            setStatus(prev => 'Bust');
-            setStack(prev => []);
-            setCount(prev => 0);
-        }
-        else {
-            setStatus(prev => 'Start');
-            setStack(prev => stack);
-            setCount(prev => sum);
-        }
 
 
     }, [detections]);
+
 
     return (
         <div className="App">
@@ -121,20 +126,26 @@ const App = () => {
             </div>
         
             {/* display output of card stack detections */}
-            { status === null && <code>Select a media to start..</code>}
-            { status === 'Start' && (
-                <>
-                    <h1>Count: {count.toString()}</h1>
-                    <code>Stack: [{stack.toString()}]</code>
-                </>
-            )}
+            { status === null && <pre>Select a media to start..</pre>}
+            
             { status === 'Blackjack' && (
-                <h1 style={{ color: 'blue' }}>{status}</h1>
+                <pre style={{ color: 'blue' }}>{status}</pre>
             )}
             { status === 'Bust' && (
-                <h1 style={{ color: 'red' }}>{status}</h1>
+                <pre style={{ color: 'red' }}>{status}</pre>
             )}
-
+            
+            { status === 'Start' && (
+                <div style={{width: model.inputShape[1]}}>
+                    <pre style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10 }}>
+                        <span>True Count: {(count / (52 - stack.length)).toFixed(2)}</span>
+                        <span>Value Count: {count}</span>
+                        <span>Detect Count: {stack.length}</span>
+                        <span>[{stack.toString()}]</span>
+                    </pre>
+                </div>
+            )}
+            
 
             {/* match the width and height of the model and the display */}
             <div ref={containerRef} className="content" width={model.inputShape[1]} height={model.inputShape[2]}>
@@ -149,19 +160,19 @@ const App = () => {
                 <img
                     src="#"
                     ref={imageRef}
-                    onLoad={() => { setStatus('Wait'); detectImage(imageRef.current, model, classThreshold, containerRef.current, (detections) => setDetections(prev => detections) )} }
+                    onLoad={() => { detectImage(imageRef.current, model, classThreshold, containerRef.current, (detections) => setDetections(prev => detections) )} }
                 />
                 <video
                     autoPlay
                     muted
                     ref={cameraRef}
-                    onPlay={() => { setStatus('Wait'); detectVideo(cameraRef.current, model, classThreshold, containerRef.current, (detections) => setDetections(prev => detections) );} }
+                    onPlay={() => { detectVideo(cameraRef.current, model, classThreshold, containerRef.current, (detections) => setDetections(prev => detections) );} }
                 />
                 <video
                     autoPlay
                     muted
                     ref={videoRef}
-                    onPlay={() => { setStatus('Wait'); detectVideo(videoRef.current, model, classThreshold, containerRef.current, (detections) => setDetections(prev => detections) )} }
+                    onPlay={() => { detectVideo(videoRef.current, model, classThreshold, containerRef.current, (detections) => setDetections(prev => detections) )} }
                 />
             </div>
 
@@ -171,9 +182,19 @@ const App = () => {
                 videoRef={videoRef}  
                 status={status}
                 reset={() => {
-                    setStatus(prev => 'Wait');
-                    setStack(prev => []);
-                    setCount(prev => 0);
+                    setStatus('Wait');
+                    setStack([]);
+                    setCount(0);
+                }}
+                close={() => {
+                    setStatus(null);
+                    setStack([]);
+                    setCount(0);
+                }}
+                open={() => {
+                    setStatus('Wait');
+                    setStack([]);
+                    setCount(0);
                 }}
             />
         </div>
